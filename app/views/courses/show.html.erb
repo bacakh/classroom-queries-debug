@@ -1,5 +1,5 @@
 <h1>
-  Course #<%= course.id %> details
+  Course #<%= @course.id %> details
 </h1>
 
 <div>
@@ -22,7 +22,7 @@
       Title
     </label>
 
-    <input type="text" id="title_box" name="query_title">
+    <input type="text" id="title_box" name="query_title" value ="<%@course.title%>">
   </div>
 
   <div>
@@ -65,7 +65,7 @@
     Title
   </dt>
   <dd>
-    <%= course.title %>
+    <%= @course.title %>
   </dd>
 
   <dt>
@@ -79,15 +79,19 @@
     Department
   </dt>
   <dd>
-    <% department = Department.where({ :id => @course.department_id }).at(0) %>
+    <% department = Department.find_by({ :id => @course.department_id }) %>
+    <% if department %>
     <a href="/departments/<%= department.id %>"><%= department.name %></a>
+    <% else %>
+    Unknown Department
+    <% end %>
   </dd>
 
   <dt>
     Number of enrolled students
   </dt>
   <dd>
-    <%= enrollment.where({ :course_id => @course.id }) %>
+    <%= Enrollment.where({ :course_id => @course.id }).count %>
   </dd>
 </dl>
 
@@ -96,11 +100,15 @@
 <h2>Roster</h2>
 <ul>
   <% Enrollment.where({ :course_id => @course.id }).each do |enrollment| %>
-    <% student = Student.where({ :id => enrollment.student_id }).at(0) %>
+    <% student = Student.find_by({ :id => enrollment.student_id })%>
+    <% if student %>
     <li>
       <a href="/students/<%= student.id %>">
         <%= student.first_name %> <%= student.last_name %>
       </a>
     </li>
+    <% else %>
+    <li>Unknown Student</li>
+    <% end %>
   <% end %>
 </ul>

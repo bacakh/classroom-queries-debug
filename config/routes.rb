@@ -3,8 +3,6 @@ Rails.application.routes.draw do
 
   #------------------------------
   # Department routes
-
-  get("/departments", { :controller => "departments", :action => "index" })
   
   get("/departments/:path_id", { :controller => "departments", :action => "show" })
 
@@ -18,24 +16,20 @@ Rails.application.routes.draw do
 
   #------------------------------
   # Course routes
-
-  get("/courses", { :controller => "courses", :action => "index" })
   
   get("/courses/:path_id", { :controller => "courses", :action => "show" })
 
-  get("/insert_course", { :controller => "courses", :action => "create" })
+  post("/insert_course", { :controller => "courses", :action => "create" })
 
-  get("/courses", { :controller => "courses_controller", :action => "index" })
+  get("/courses", { :controller => "courses", :action => "index" })
   
-  get("/modify_course/:path_id", { :controller => "courses", :action => "update" })
+  post("/modify_course/:path_id", { :controller => "courses", :action => "update" })
 
   get("/delete_course/:path_id", { :controller => "courses", :action => "destroy" })
 
   #------------------------------
   # Student routes
-
-  get("/students", { :controller => "students", :action => "index" })
-  
+ 
   get("/students/:path_id", { :controller => "students", :action => "show" })
 
   post("/insert_student", { :controller => "students", :action => "create" })

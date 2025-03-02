@@ -7,7 +7,12 @@ class CoursesController < ApplicationController
 
   def show
     the_id = params.fetch("path_id")
-    @course = Course.where({:id => the_id }).at(0)
+    @course = Course.find_by({:id => the_id })
+    
+    unless @course
+      redirect_to("/courses", alert: "Course not found.")
+      return
+    end
 
     render({ :template => "courses/show" })
   end
@@ -15,11 +20,10 @@ class CoursesController < ApplicationController
   def create
     @course = Course.new
     @course.title = params.fetch("query_title")
-    @course.term_offered = params.fetch("query_term_")
+    @course.term_offered = params.fetch("query_term")
     @course.department_id = params.fetch("query_department_id")
 
-    if @course.valid?
-      @course.save
+    if @course.save
       redirect_to("/courses", { :notice => "Course created successfully." })
     else
       redirect_to("/courses", { :notice => "Course failed to create successfully." })
@@ -28,7 +32,11 @@ class CoursesController < ApplicationController
 
   def update
     id = params.fetch("path_id")
-    @course = Course.where({ :id => the_id }).at(0)
+    @course = Course.find_by({ :id => id })
+    unless @course
+      redirect_to("/courses", alert: "Course not found.")
+      return
+    end
 
     @course.title = params.fetch("query_title")
     @course.term_offered = params.fetch("query_term_offered")
@@ -44,10 +52,13 @@ class CoursesController < ApplicationController
 
   def destroy
     the_id = params.fetch("path")
-    @course = Course.where({ :id => the_id }).at(0)
+    @course = Course.find_by({ :id => the_id })
 
-    @course.destroy
-
-    redirect_to("/courses", { :notice => "Course deleted successfully."} )
+    if @course
+      @course.destroy
+      redirect_to("/courses", notice: "Course deleted successfully.")
+    else
+      redirect_to("/courses", alert: "Course not found.")
+    end
   end
 end
