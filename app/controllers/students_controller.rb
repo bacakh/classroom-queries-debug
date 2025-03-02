@@ -28,7 +28,12 @@ class StudentsController < ApplicationController
 
   def update
     the_id = params.fetch("path_id")
-    @student = Student.where({ :id => the_id }).at(0)
+    @student = Student.find_by({ :id => the_id })
+
+    unless @student
+      redirect_to("/students", alert: "Student not found.")
+      return
+    end
 
     @student.first_name = params.fetch("query_first_name")
     @student.last_name = params.fetch("query_last_name")
